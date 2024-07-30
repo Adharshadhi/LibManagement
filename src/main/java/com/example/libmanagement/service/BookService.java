@@ -20,9 +20,17 @@ public class BookService{
         return bookDao.listBooks();
     }
 
+    public List<Book> listBooks(String search) {
+        return bookDao.listBooks(search);
+    }
+
     @Transactional
-    public int saveBook(Book book){
-        return bookDao.saveBook(book);
+    public int saveBook(Book book, String updateAction){
+        return bookDao.saveBook(book, updateAction);
+    }
+
+    public Book listBookById(Integer id){
+        return bookDao.listBookById(id);
     }
 
 }

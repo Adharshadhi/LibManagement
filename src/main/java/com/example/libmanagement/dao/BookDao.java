@@ -20,14 +20,34 @@ public class BookDao {
         return bookList;
     }
 
-    public int saveBook(Book book){
+    public List<Book> listBooks(String search) {
+        TypedQuery<Book> typedQuery = entityManager.createQuery("FROM Book WHERE title Like :title",Book.class);
+        typedQuery.setParameter("title",'%' + search + '%');
+        List<Book> bookList = typedQuery.getResultList();
+        return bookList;
+    }
+
+    public int saveBook(Book book, String updateAction){
         try {
-            entityManager.persist(book);
+            if(updateAction.equalsIgnoreCase("yes")){
+                entityManager.merge(book);
+            }else{
+                entityManager.persist(book);
+            }
             return 1;
         }catch (Exception ex){
             System.out.println("Exception caught!");
             return 0;
         }
     }
+
+    public Book listBookById(Integer id) {
+        TypedQuery<Book> typedQuery = entityManager.createQuery("FROM Book WHERE bookId = :bookId",Book.class);
+        typedQuery.setParameter("bookId",id);
+        Book book = typedQuery.getSingleResult();
+        return book;
+    }
+
+
 
 }

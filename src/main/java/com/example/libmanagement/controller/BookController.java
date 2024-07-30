@@ -5,9 +5,7 @@ import com.example.libmanagement.service.BookService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,8 +24,13 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public String listBooks(Model model){
-        List<Book> bookList = bookService.listBooks();
+    public String listBooks(@RequestParam(defaultValue = "") String search, Model model){
+        List<Book> bookList;
+        if(search.trim().equals("")){
+            bookList = bookService.listBooks();
+        }else{
+            bookList = bookService.listBooks(search);
+        }
         model.addAttribute("bookList",bookList);
         return "listbook";
     }
@@ -39,15 +42,23 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public String saveBook(@ModelAttribute(name = "book") Book book, HttpServletResponse response){
+    public String saveBook(@ModelAttribute(name = "book") Book book,
+                           @RequestParam(defaultValue = "no", name = "updateAction") String updateAction,
+                           HttpServletResponse response){
         try{
-            int status = bookService.saveBook(book);
-            System.out.println(status);
+            int status = bookService.saveBook(book, updateAction);
             response.sendRedirect("/books");
         }catch (Exception ex){
             System.out.println("Exception caught");
         }
         return null;
+    }
+
+    @GetMapping("/books/{id}")
+    public String editBook(@PathVariable Integer id, Model model){
+        Book book = bookService.listBookById(id);
+        model.addAttribute("book",book);
+        return "addeditbook";
     }
 
 }
