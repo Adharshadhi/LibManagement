@@ -2,6 +2,7 @@ package com.example.libmanagement.service;
 
 import com.example.libmanagement.dao.BookDao;
 import com.example.libmanagement.model.Book;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,11 @@ public class BookService{
 
     public List<Book> listBooks() {
         return bookDao.listBooks();
+    }
+
+    @Transactional
+    public int saveBook(Book book){
+        return bookDao.saveBook(book);
     }
 
 }

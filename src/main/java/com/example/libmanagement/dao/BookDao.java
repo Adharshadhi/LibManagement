@@ -20,4 +20,14 @@ public class BookDao {
         return bookList;
     }
 
+    public int saveBook(Book book){
+        try {
+            entityManager.persist(book);
+            return 1;
+        }catch (Exception ex){
+            System.out.println("Exception caught!");
+            return 0;
+        }
+    }
+
 }
