@@ -7,6 +7,7 @@ import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class BookDao {
@@ -20,9 +21,11 @@ public class BookDao {
         return bookList;
     }
 
-    public List<Book> listBooks(String search) {
-        TypedQuery<Book> typedQuery = entityManager.createQuery("FROM Book WHERE title Like :title",Book.class);
-        typedQuery.setParameter("title",'%' + search + '%');
+    public List<Book> listBooks(String query, Map<String, Object> queryParams) {
+        TypedQuery<Book> typedQuery = entityManager.createQuery(query,Book.class);
+        for (Map.Entry<String, Object> entry : queryParams.entrySet()) {
+            typedQuery.setParameter(entry.getKey(), entry.getValue());
+        }
         List<Book> bookList = typedQuery.getResultList();
         return bookList;
     }
@@ -48,6 +51,15 @@ public class BookDao {
         return book;
     }
 
-
+    public int deleteBook(Integer bookId){
+        try {
+            Book book = listBookById(bookId);
+            entityManager.remove(book);
+            return 1;
+        }catch (Exception ex){
+            System.out.println("Exception caught!");
+            return 0;
+        }
+    }
 
 }

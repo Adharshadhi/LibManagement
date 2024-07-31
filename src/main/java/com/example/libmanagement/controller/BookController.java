@@ -24,12 +24,14 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public String listBooks(@RequestParam(defaultValue = "") String search, Model model){
+    public String listBooks(@RequestParam(defaultValue = "") String search,
+                            @RequestParam(defaultValue = "0") Integer filterVal,
+                            Model model){
         List<Book> bookList;
         if(search.trim().equals("")){
             bookList = bookService.listBooks();
         }else{
-            bookList = bookService.listBooks(search);
+            bookList = bookService.listBooks(search,filterVal);
         }
         model.addAttribute("bookList",bookList);
         return "listbook";
@@ -59,6 +61,18 @@ public class BookController {
         Book book = bookService.listBookById(id);
         model.addAttribute("book",book);
         return "addeditbook";
+    }
+
+    @PostMapping("/books/delete")
+    public String deleteBook(@RequestParam(name = "selectedBooks") String selectedBooks,
+                             HttpServletResponse response){
+        try{
+            int status = bookService.deleteBook(selectedBooks);
+            response.sendRedirect("/books");
+        }catch (Exception ex){
+            System.out.println("Exception caught");
+        }
+        return null;
     }
 
 }
