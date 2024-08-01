@@ -2,6 +2,8 @@ package com.example.libmanagement.service;
 
 import com.example.libmanagement.dao.BookDao;
 import com.example.libmanagement.model.Book;
+import com.example.libmanagement.model.BorrowedBookDetails;
+import com.example.libmanagement.model.Customer;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +76,23 @@ public class BookService{
             status = bookDao.deleteBook(Integer.valueOf(bookId));
         }
         return status;
+    }
+
+    public List<Customer> listCustomers() {
+        return bookDao.listCustomers();
+    }
+
+    public List<BorrowedBookDetails> listBorrowers(Integer id) {
+        return bookDao.listBorrowers(id);
+    }
+
+    @Transactional
+    public int saveCustomer(Customer customer, String updateAction){
+        return bookDao.saveCustomer(customer, updateAction);
+    }
+
+    public Customer listCustomerById(Integer id){
+        return bookDao.listCustomerById(id);
     }
 
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer Add</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<div class="mainContentArea">
+  <div th:insert="~{header :: navHeader}"></div>
+  <div class="customerAddContainer p-3">
+    <form class="d-flex flex-column mx-auto w-50 " th:object="${customer}" th:action="@{/customers}" method="POST">
+
+      <input th:if="${customer.customerId != null}" type="hidden" name="updateAction" value="yes"/>
+      <input th:if="${customer.customerId != null}" type="hidden" th:field="${customer.customerId}"/>
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input th:type="text" th:field="*{firstName}" class="form-control" id="firstName" aria-describedby="firstName">
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input th:type="text" th:field="*{lastName}" class="form-control" id="lastName" aria-describedby="lastName">
+      </div>
+      <div class="mb-3">
+        <label for="emailId" class="form-label">Email</label>
+        <input th:type="email" th:field="*{email}" class="form-control" id="emailId" aria-describedby="emailId">
+      </div>
+      <div class="mb-3">
+        <label for="phoneNumber" class="form-label">Phone</label>
+        <input th:type="text" th:field="*{phone}"  class="form-control" id="phoneNumber" aria-describedby="phoneNumber">
+      </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input th:type="text" th:field="*{address}" class="form-control" id="address" aria-describedby="address">
+      </div>
+      <div class="d-flex justify-content-end">
+        <a class="btn btn-secondary text-decoration-none mx-2" th:href="@{/customers}" th:method="GET">Cancel</a>
+        <button th:if="${customer.customerId != null}" type="submit" class="btn btn-primary">Update</button>
+        <button th:if="${customer.customerId == null}" type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>

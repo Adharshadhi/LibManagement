@@ -1,6 +1,8 @@
 package com.example.libmanagement.controller;
 
 import com.example.libmanagement.model.Book;
+import com.example.libmanagement.model.BorrowedBookDetails;
+import com.example.libmanagement.model.Customer;
 import com.example.libmanagement.service.BookService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
@@ -73,6 +75,46 @@ public class BookController {
             System.out.println("Exception caught");
         }
         return null;
+    }
+
+    @GetMapping("/customers")
+    public String listCustomers(Model model){
+        List<Customer> customerList = bookService.listCustomers();
+        model.addAttribute("customerList",customerList);
+        return "listcustomer";
+    }
+
+    @GetMapping("/customers/add")
+    public String addCustomer(Model model){
+        model.addAttribute("customer",new Customer());
+        return "addeditcustomer";
+    }
+
+    @GetMapping("/borrowers/{id}")
+    public String listBorrowers(@PathVariable Integer id, Model model){
+        List<BorrowedBookDetails> borrowedBookDetailsList = bookService.listBorrowers(id);
+        model.addAttribute("borrowedBookDetailsList",borrowedBookDetailsList);
+        return "listborrowerdetails";
+    }
+
+    @PostMapping("/customers")
+    public String saveCustomer(@ModelAttribute(name = "customer") Customer customer,
+                           @RequestParam(defaultValue = "no", name = "updateAction") String updateAction,
+                           HttpServletResponse response){
+        try{
+            int status = bookService.saveCustomer(customer, updateAction);
+            response.sendRedirect("/customers");
+        }catch (Exception ex){
+            System.out.println("Exception caught!" + ex.getMessage());
+        }
+        return null;
+    }
+
+    @GetMapping("/customers/{id}")
+    public String editCustomer(@PathVariable Integer id, Model model){
+        Customer customer = bookService.listCustomerById(id);
+        model.addAttribute("customer",customer);
+        return "addeditcustomer";
     }
 
 }

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+  <meta charset="UTF-8">
+  <title>Borrower List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+
+<div class="mainContentArea">
+  <div th:insert="~{header :: navHeader}"></div>
+  <div class="d-flex justify-content-between align-items-center my-2 mx-2">
+    <div class="customerButtonContainer">
+      <a class="btn btn-outline-success" th:href="@{/books/add}">Add</a>
+      <a class="btn btn-outline-primary mx-2" onclick="editBook()">Edit</a>
+      <form th:action="@{/books/delete}" method="POST" name="deleteForm" class="d-inline">
+        <input type="hidden" name="selectedBooks" value="" />
+        <a class="btn btn-outline-danger" onclick="deleteBook()">Delete</a>
+      </form>
+    </div>
+    <div class="searchContainer d-flex">
+      <form class="d-flex" role="search" onsubmit="return searchItem()" th:action="@{/books}" method="GET">
+        <select id="filterVal" class="form-select customDropDown mx-3" name="filterVal" aria-label="Default select example">
+          <option value="0" selected>Choose Filter</option>
+          <option value="1">Book Title</option>
+          <option value="2">Author</option>
+          <option value="3">Publisher</option>
+          <option value="4">Publication Year</option>
+          <option value="5">Category</option>
+          <option value="6">Available Quantity</option>
+        </select>
+        <input id="searchVal" class="form-control me-2" type="search" placeholder="Search" aria-label="Book Title" name="search">
+        <button class="btn btn-outline-success mx-2" type="submit">Search</button>
+      </form>
+      <a class="btn btn-outline-secondary text-decoration-none mx-2" th:href="@{/books}" th:method="GET">Clear Search</a>
+    </div>
+  </div>
+
+  <div class="customerGridContainer mx-auto p-2">
+    <table class="table table-hover table-bordered">
+      <thead>
+      <tr class="table-dark">
+        <th scope="col"></th>
+        <th scope="col">Sl No</th>
+        <th scope="col">Customer Name</th>
+        <th scope="col">Book Title</th>
+        <th scope="col">Borrowed Date</th>
+        <th scope="col">Expected Return Date</th>
+        <th scope="col">Actual Return Date</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr th:each="borrowerObj, iterStat : ${borrowedBookDetailsList}">
+        <td>
+          <input class="form-check-input" type="checkbox" th:value="${borrowerObj.borrowId}" id="borrowIdCheck">
+        </td>
+        <td th:text="${iterStat.count}"></td>
+        <td th:text="${borrowerObj.customer.firstName} + ' ' + ${borrowerObj.customer.lastName} "></td>
+        <td th:text="${borrowerObj.book.title}"></td>
+        <td th:text="${borrowerObj.borrowDate}"></td>
+        <td th:text="${borrowerObj.expectedReturnDate}"></td>
+        <td th:text="${borrowerObj.actualReturnDate}">Null value</td>
+      </tr>
+      </tbody>
+
+    </table>
+
+    <!--      <nav aria-label="Page navigation example">-->
+    <!--        <ul class="pagination justify-content-end">-->
+    <!--          <li class="page-item"><a class="page-link" href="#">Previous</a></li>-->
+    <!--          <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+    <!--          <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+    <!--          <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+    <!--          <li class="page-item"><a class="page-link" href="#">Next</a></li>-->
+    <!--        </ul>-->
+    <!--      </nav>-->
+
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script>
+
+  function editBook(){
+    let bookIdCheck = document.querySelectorAll("#bookIdCheck:checked");
+    if(bookIdCheck.length !== 1){
+      alert("Please select only one item");
+    }else{
+      window.location.href = "/books/" + bookIdCheck[0].value;
+    }
+  }
+
+  function deleteBook(){
+    let bookIdCheck = document.querySelectorAll("#bookIdCheck:checked");
+    if(bookIdCheck.length === 0){
+      alert("Please select atleast one item");
+    }else{
+      let confirmUser = confirm("Do you want to delete the selected item(s)? ");
+      if(confirmUser === true){
+        let selectedValues = [];
+        bookIdCheck.forEach((checkbox) => {
+          selectedValues.push(checkbox.value);
+        });
+        document.deleteForm.selectedBooks.value = selectedValues.join(",");
+        document.deleteForm.submit();
+      }
+    }
+  }
+
+  function searchItem(){
+    let selectedFilter = document.getElementById("filterVal").value.trim();
+    let searchVal = document.getElementById("searchVal").value.trim();
+    if(selectedFilter === "0"){
+      alert("Choose any valid filter");
+      return false;
+    }
+    if(searchVal === ""){
+      alert("Search field is empty");
+      return false;
+    }
+  }
+
+</script>
+
+</body>
+</html>
