@@ -14,26 +14,25 @@
     <div class="customerButtonContainer">
       <a class="btn btn-outline-success" th:href="@{/customers/add}">Add</a>
       <a class="btn btn-outline-primary mx-2" onclick="editCustomer()">Edit</a>
-      <form th:action="@{/books/delete}" method="POST" name="deleteForm" class="d-inline">
-        <input type="hidden" name="selectedBooks" value="" />
+      <form th:action="@{/customers/delete}" method="POST" name="deleteForm" class="d-inline">
+        <input type="hidden" name="selectedCustomers" value="" />
         <a class="btn btn-outline-danger" onclick="deleteBook()">Delete</a>
       </form>
     </div>
     <div class="searchContainer d-flex">
-      <form class="d-flex" role="search" onsubmit="return searchItem()" th:action="@{/books}" method="GET">
+      <form class="d-flex" role="search" onsubmit="return searchItem()" th:action="@{/customers}" method="GET">
         <select id="filterVal" class="form-select customDropDown mx-3" name="filterVal" aria-label="Default select example">
           <option value="0" selected>Choose Filter</option>
-          <option value="1">Book Title</option>
-          <option value="2">Author</option>
-          <option value="3">Publisher</option>
-          <option value="4">Publication Year</option>
-          <option value="5">Category</option>
-          <option value="6">Available Quantity</option>
+          <option value="1">First Name</option>
+          <option value="2">Last Name</option>
+          <option value="3">Email</option>
+          <option value="4">Phone</option>
+          <option value="5">Address</option>
         </select>
-        <input id="searchVal" class="form-control me-2" type="search" placeholder="Search" aria-label="Book Title" name="search">
+        <input id="searchVal" class="form-control me-2" type="search" placeholder="Search" aria-label="Customer Name" name="search">
         <button class="btn btn-outline-success mx-2" type="submit">Search</button>
       </form>
-      <a class="btn btn-outline-secondary text-decoration-none mx-2" th:href="@{/books}" th:method="GET">Clear Search</a>
+      <a class="btn btn-outline-secondary text-decoration-none mx-2" th:href="@{/customers}" th:method="GET">Clear Search</a>
     </div>
   </div>
 
@@ -97,17 +96,17 @@
   }
 
   function deleteBook(){
-    let bookIdCheck = document.querySelectorAll("#bookIdCheck:checked");
-    if(bookIdCheck.length === 0){
+    let customerIdCheck = document.querySelectorAll("#customerIdCheck:checked");
+    if(customerIdCheck.length === 0){
       alert("Please select atleast one item");
     }else{
       let confirmUser = confirm("Do you want to delete the selected item(s)? ");
       if(confirmUser === true){
         let selectedValues = [];
-        bookIdCheck.forEach((checkbox) => {
+        customerIdCheck.forEach((checkbox) => {
           selectedValues.push(checkbox.value);
         });
-        document.deleteForm.selectedBooks.value = selectedValues.join(",");
+        document.deleteForm.selectedCustomers.value = selectedValues.join(",");
         document.deleteForm.submit();
       }
     }

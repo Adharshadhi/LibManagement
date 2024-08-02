@@ -95,4 +95,45 @@ public class BookService{
         return bookDao.listCustomerById(id);
     }
 
+    @Transactional
+    public int deleteCustomer(String selectedCustomers){
+        String[] customerIdArr = selectedCustomers.split(",");
+        int status = 0;
+        for(String customerId : customerIdArr){
+            status = bookDao.deleteCustomer(Integer.valueOf(customerId));
+        }
+        return status;
+    }
+
+    public List<Customer> listCustomers(String search, Integer filterVal) {
+        StringBuilder query = new StringBuilder();
+        query.append(" FROM Customer ");
+        Map<String, Object> queryParams = new LinkedHashMap<>();
+
+        switch (filterVal){
+            case 1 -> {
+                query.append(" WHERE firstName Like :firstName ");
+                queryParams.put("firstName",'%' + search + '%');
+            }
+            case 2 -> {
+                query.append(" WHERE lastName Like :lastName ");
+                queryParams.put("lastName",'%' + search + '%');
+            }
+            case 3 -> {
+                query.append(" WHERE email Like :email ");
+                queryParams.put("email",'%' + search + '%');
+            }
+            case 4 -> {
+                query.append(" WHERE phone Like :phone ");
+                queryParams.put("phone",'%' + search + '%');
+            }
+            default -> {
+                query.append(" WHERE address Like :address ");
+                queryParams.put("address",'%' + search + '%');
+            }
+        }
+
+        return bookDao.listCustomers(query.toString(), queryParams);
+    }
+
 }

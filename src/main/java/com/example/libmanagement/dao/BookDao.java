@@ -98,4 +98,24 @@ public class BookDao {
         return customer;
     }
 
+    public int deleteCustomer(Integer customerId){
+        try {
+            Customer customer = listCustomerById(customerId);
+            entityManager.remove(customer);
+            return 1;
+        }catch (Exception ex){
+            System.out.println("Exception caught!");
+            return 0;
+        }
+    }
+
+    public List<Customer> listCustomers(String query, Map<String, Object> queryParams) {
+        TypedQuery<Customer> typedQuery = entityManager.createQuery(query,Customer.class);
+        for (Map.Entry<String, Object> entry : queryParams.entrySet()) {
+            typedQuery.setParameter(entry.getKey(), entry.getValue());
+        }
+        List<Customer> customerList = typedQuery.getResultList();
+        return customerList;
+    }
+
 }

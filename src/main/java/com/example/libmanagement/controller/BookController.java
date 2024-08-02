@@ -78,8 +78,15 @@ public class BookController {
     }
 
     @GetMapping("/customers")
-    public String listCustomers(Model model){
-        List<Customer> customerList = bookService.listCustomers();
+    public String listCustomers(@RequestParam(defaultValue = "") String search,
+                            @RequestParam(defaultValue = "0") Integer filterVal,
+                            Model model){
+        List<Customer> customerList;
+        if(search.trim().equals("")){
+            customerList = bookService.listCustomers();
+        }else{
+            customerList = bookService.listCustomers(search,filterVal);
+        }
         model.addAttribute("customerList",customerList);
         return "listcustomer";
     }
@@ -115,6 +122,18 @@ public class BookController {
         Customer customer = bookService.listCustomerById(id);
         model.addAttribute("customer",customer);
         return "addeditcustomer";
+    }
+
+    @PostMapping("/customers/delete")
+    public String deleteCustomer(@RequestParam(name = "selectedCustomers") String selectedCustomers,
+                             HttpServletResponse response){
+        try{
+            int status = bookService.deleteCustomer(selectedCustomers);
+            response.sendRedirect("/customers");
+        }catch (Exception ex){
+            System.out.println("Exception caught");
+        }
+        return null;
     }
 
 }
