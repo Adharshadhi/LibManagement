@@ -97,9 +97,9 @@ public class BookController {
         return "addeditcustomer";
     }
 
-    @GetMapping("/borrowers/{id}")
-    public String listBorrowers(@PathVariable Integer id, Model model){
-        List<BorrowedBookDetails> borrowedBookDetailsList = bookService.listBorrowers(id);
+    @GetMapping("/records/{id}")
+    public String listRecords(@PathVariable Integer id, Model model){
+        List<BorrowedBookDetails> borrowedBookDetailsList = bookService.listRecords(id);
         model.addAttribute("borrowedBookDetailsList",borrowedBookDetailsList);
         return "listborrowerdetails";
     }
@@ -132,6 +132,37 @@ public class BookController {
             response.sendRedirect("/customers");
         }catch (Exception ex){
             System.out.println("Exception caught");
+        }
+        return null;
+    }
+
+    @GetMapping("/records/add")
+    public String addRecord(Model model){
+        BorrowedBookDetails borrowedBookDetails = new BorrowedBookDetails();
+        List<Customer> customerList = bookService.listCustomers();
+        List<Book> bookList = bookService.listBooks();
+        model.addAttribute("borrowedBookDetails",borrowedBookDetails);
+        model.addAttribute("customerList",customerList);
+        model.addAttribute("bookList",bookList);
+        return "addeditrecord";
+    }
+
+    @PostMapping("/records")
+    public String saveRecord(@ModelAttribute BorrowedBookDetails borrowedBookDetails,
+                             @RequestParam Integer selectedCustomer,
+                             @RequestParam Integer selectedBook,
+                             HttpServletResponse response
+                             ){
+
+        try{
+            Customer customer = bookService.listCustomerById(selectedCustomer);
+            Book book = bookService.listBookById(selectedBook);
+            borrowedBookDetails.setCustomer(customer);
+            borrowedBookDetails.setBook(book);
+            int status = bookService.saveRecord(borrowedBookDetails);
+            response.sendRedirect("/customers");
+        }catch (Exception ex){
+            System.out.println("Exception caught!" + ex.getMessage());
         }
         return null;
     }

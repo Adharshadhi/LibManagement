@@ -82,8 +82,8 @@ public class BookService{
         return bookDao.listCustomers();
     }
 
-    public List<BorrowedBookDetails> listBorrowers(Integer id) {
-        return bookDao.listBorrowers(id);
+    public List<BorrowedBookDetails> listRecords(Integer id) {
+        return bookDao.listRecords(id);
     }
 
     @Transactional
@@ -134,6 +134,11 @@ public class BookService{
         }
 
         return bookDao.listCustomers(query.toString(), queryParams);
+    }
+
+    @Transactional
+    public int saveRecord(BorrowedBookDetails borrowedBookDetails){
+        return bookDao.saveRecord(borrowedBookDetails);
     }
 
 }

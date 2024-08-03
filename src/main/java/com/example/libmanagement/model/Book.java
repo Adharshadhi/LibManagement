@@ -2,6 +2,9 @@ package com.example.libmanagement.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "books")
 public class Book {
@@ -27,6 +30,9 @@ public class Book {
 
     @Column(name = "available_quantity")
     private Integer availableQuantity;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BorrowedBookDetails> borrowedBooksDetails = new ArrayList<>();
 
     public Integer getBookId() {
         return bookId;
@@ -84,6 +90,14 @@ public class Book {
         this.availableQuantity = availableQuantity;
     }
 
+    public List<BorrowedBookDetails> getBorrowedBooksDetails() {
+        return borrowedBooksDetails;
+    }
+
+    public void setBorrowedBooksDetails(List<BorrowedBookDetails> borrowedBooksDetails) {
+        this.borrowedBooksDetails = borrowedBooksDetails;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -94,6 +108,7 @@ public class Book {
                 ", publicationYear=" + publicationYear +
                 ", category='" + category + '\'' +
                 ", availableQuantity=" + availableQuantity +
+                ", borrowedBooksDetails=" + borrowedBooksDetails +
                 '}';
     }
 }

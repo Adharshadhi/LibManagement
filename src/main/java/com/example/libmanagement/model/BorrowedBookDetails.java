@@ -1,6 +1,7 @@
 package com.example.libmanagement.model;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -21,12 +22,15 @@ public class BorrowedBookDetails {
     private Book book;
 
     @Column(name = "borrow_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date borrowDate;
 
     @Column(name = "expected_return_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date expectedReturnDate;
 
     @Column(name = "return_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date actualReturnDate;
 
     public Integer getBorrowId() {
@@ -81,8 +85,8 @@ public class BorrowedBookDetails {
     public String toString() {
         return "BorrowedBookDetails{" +
                 "borrowId=" + borrowId +
-                ", customerId=" + customer +
-                ", bookId=" + book +
+                ", customerId=" + customer.getCustomerId() +
+                ", bookId=" + book.getBookId() +
                 ", borrowDate=" + borrowDate +
                 ", expectedReturnDate=" + expectedReturnDate +
                 ", actualReturnDate=" + actualReturnDate +

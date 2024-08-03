@@ -70,7 +70,7 @@ public class BookDao {
         return customerList;
     }
 
-    public List<BorrowedBookDetails> listBorrowers(Integer id) {
+    public List<BorrowedBookDetails> listRecords(Integer id) {
         TypedQuery<BorrowedBookDetails> typedQuery = entityManager.createQuery("FROM BorrowedBookDetails WHERE customer.customerId = :customerId",BorrowedBookDetails.class);
         typedQuery.setParameter("customerId",id);
         List<BorrowedBookDetails> borrowedBookDetailsList = typedQuery.getResultList();
@@ -116,6 +116,16 @@ public class BookDao {
         }
         List<Customer> customerList = typedQuery.getResultList();
         return customerList;
+    }
+
+    public int saveRecord(BorrowedBookDetails borrowedBookDetails){
+        try {
+            entityManager.persist(borrowedBookDetails);
+            return 1;
+        }catch (Exception ex){
+            System.out.println("Exception caught!");
+            return 0;
+        }
     }
 
 }
