@@ -137,8 +137,20 @@ public class BookService{
     }
 
     @Transactional
-    public int saveRecord(BorrowedBookDetails borrowedBookDetails){
-        return bookDao.saveRecord(borrowedBookDetails);
+    public int saveRecord(BorrowedBookDetails borrowedBookDetails, Book book) {
+        try{
+            bookDao.saveRecord(borrowedBookDetails);
+            book.setAvailableQuantity(book.getAvailableQuantity()-1);
+            bookDao.saveBook(book,"yes");
+            return 1;
+        }catch (Exception ex){
+            System.out.println("Exception caught!");
+            return 0;
+        }
+    }
+
+    public List<Book> listAvailableBooks() {
+        return bookDao.listAvailableBooks();
     }
 
 }

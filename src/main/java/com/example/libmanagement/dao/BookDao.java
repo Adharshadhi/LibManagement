@@ -128,4 +128,10 @@ public class BookDao {
         }
     }
 
+    public List<Book> listAvailableBooks() {
+        TypedQuery<Book> typedQuery = entityManager.createQuery("FROM Book WHERE availableQuantity > 0",Book.class);
+        List<Book> bookList = typedQuery.getResultList();
+        return bookList;
+    }
+
 }

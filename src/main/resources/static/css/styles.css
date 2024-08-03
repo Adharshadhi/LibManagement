@@ -14,3 +14,22 @@
 .customDropDown option{
     color: #444444;
 }
+
+.customAlert {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Transition for fade effect */
+    background-color: #f8d7da; /* Example background color */
+    color: #721c24; /* Example text color */
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    width: 80%;
+    margin: 10px auto;
+}
+
+.customAlert.showClass {
+    opacity: 1;
+}
+
+.customAlert.hideClass {
+    opacity: 0;
+}

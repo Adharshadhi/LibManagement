@@ -10,7 +10,7 @@
         <div class="mainContentArea">
             <div th:insert="~{header :: navHeader}"></div>
             <div class="bookAddContainer p-3">
-                <form class="d-flex flex-column mx-auto w-50 " th:object="${book}" th:action="@{/books}" method="POST">
+                <form class="d-flex flex-column mx-auto w-50 " onsubmit="return validateFields();" th:object="${book}" th:action="@{/books}" method="POST">
 
                     <input th:if="${book.bookId != null}" type="hidden" name="updateAction" value="yes"/>
                     <input th:if="${book.bookId != null}" type="hidden" th:field="${book.bookId}"/>
@@ -50,5 +50,108 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
+
+        <script>
+
+            function validateFields(){
+                let bookTitle = document.getElementById("bookTitle").value;
+                let bookAuthor = document.getElementById("bookAuthor").value;
+                let bookPublisher = document.getElementById("bookPublisher").value;
+                let publicationYear = document.getElementById("publicationYear").value;
+                let bookCategory = document.getElementById("bookCategory").value;
+                let availableQuantity = document.getElementById("availableQuantity").value;
+
+                if(validateRequired(bookTitle)){
+                    showCustomAlert("Book Title must not be empty!");
+                    return false;
+                }
+
+                if(validateLength(bookTitle, 100)){
+                    showCustomAlert("Maximum characters allowed for Book Title is: " + 100);
+                    return false;
+                }
+
+                if(validateRequired(bookAuthor)){
+                    showCustomAlert("Book Author must not be empty!");
+                    return false;
+                }
+
+                if(validateLength(bookAuthor, 100)){
+                    showCustomAlert("Maximum characters allowed for Book Author is: " + 100);
+                    return false;
+                }
+
+                if(validateRequired(bookPublisher)){
+                    showCustomAlert("Book Publisher must not be empty!");
+                    return false;
+                }
+
+                if(validateLength(bookPublisher, 100)){
+                    showCustomAlert("Maximum characters allowed for Book Publisher is: " + 100);
+                    return false;
+                }
+
+                if(validateRequired(publicationYear)) {
+                    showCustomAlert("Publication year is required.");
+                    return false;
+                }
+
+                if(!/^\d{4}$/.test(publicationYear)){
+                    showCustomAlert("Publication year must be a 4-digit number.");
+                    return false;
+                }
+
+                if(publicationYear < 1850 || publicationYear > new Date().getFullYear()){
+                    showCustomAlert("Publication year must be in valid range");
+                    return false;
+                }
+
+                if(validateRequired(bookCategory)){
+                    showCustomAlert("Book Category must not be empty!");
+                    return false;
+                }
+
+                if(validateLength(bookCategory, 100)){
+                    showCustomAlert("Maximum characters allowed for Book Category is: " + 100);
+                    return false;
+                }
+
+                if(validateRequired(availableQuantity)) {
+                    showCustomAlert("Available Quantity is required!");
+                    return false;
+                }
+
+                if(!/^\d+$/.test(availableQuantity) || availableQuantity < 0 || availableQuantity > 500){
+                    showCustomAlert("Available Quantity must be a positive integer less than 500!");
+                    return false;
+                }
+
+                return true;
+
+            }
+
+            function validateRequired(fieldVal){
+                return fieldVal.trim() === "";
+            }
+
+            function validateLength(fieldVal, maxAllowed){
+                return fieldVal.length > maxAllowed;
+            }
+
+            function showCustomAlert(message){
+                let customAlert = document.querySelector(".customAlert");
+                if(customAlert.classList.contains("hideClass")){
+                    customAlert.textContent = message;
+                    customAlert.classList.remove("hideClass");
+                    customAlert.classList.add("showClass");
+                    window.scrollTo(0,0);
+                }
+                setTimeout(()=>{
+                    customAlert.classList.add("hideClass");
+                    customAlert.classList.remove("showClass");
+                },3000);
+            }
+
+        </script>
     </body>
 </html>

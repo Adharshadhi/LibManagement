@@ -140,7 +140,7 @@ public class BookController {
     public String addRecord(Model model){
         BorrowedBookDetails borrowedBookDetails = new BorrowedBookDetails();
         List<Customer> customerList = bookService.listCustomers();
-        List<Book> bookList = bookService.listBooks();
+        List<Book> bookList = bookService.listAvailableBooks();
         model.addAttribute("borrowedBookDetails",borrowedBookDetails);
         model.addAttribute("customerList",customerList);
         model.addAttribute("bookList",bookList);
@@ -159,7 +159,7 @@ public class BookController {
             Book book = bookService.listBookById(selectedBook);
             borrowedBookDetails.setCustomer(customer);
             borrowedBookDetails.setBook(book);
-            int status = bookService.saveRecord(borrowedBookDetails);
+            int status = bookService.saveRecord(borrowedBookDetails, book);
             response.sendRedirect("/customers");
         }catch (Exception ex){
             System.out.println("Exception caught!" + ex.getMessage());
