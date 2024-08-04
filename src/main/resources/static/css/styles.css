@@ -7,7 +7,7 @@
     color: #0d6efd;
     border-color: #0d6efd;
     border-radius: 5px;
-    padding: 0 5px;
+    padding: 0 30px 0 5px;
     font-weight: normal;
 }
 
@@ -16,20 +16,23 @@
 }
 
 .customAlert {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out; /* Transition for fade effect */
-    background-color: #f8d7da; /* Example background color */
-    color: #721c24; /* Example text color */
     border: 1px solid #f5c6cb;
     border-radius: 5px;
     width: 80%;
     margin: 10px auto;
 }
 
-.customAlert.showClass {
-    opacity: 1;
+.autoWid{
+    width: auto!important;
 }
 
-.customAlert.hideClass {
-    opacity: 0;
+.headerBg{
+    color: #134B70;
+}
+
+.formBg{
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

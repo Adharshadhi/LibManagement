@@ -1,131 +1,143 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
-<head>
-  <meta charset="UTF-8">
-  <title>Customer List</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link th:href="@{/css/styles.css}" rel="stylesheet">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Customer List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  </head>
+  <body>
 
-<div class="mainContentArea">
-  <div th:insert="~{header :: navHeader}"></div>
-  <div class="d-flex justify-content-between align-items-center my-2 mx-2">
-    <div class="customerButtonContainer">
-      <a class="btn btn-outline-success" th:href="@{/customers/add}">Add</a>
-      <a class="btn btn-outline-primary mx-2" onclick="editCustomer()">Edit</a>
-      <form th:action="@{/customers/delete}" method="POST" name="deleteForm" class="d-inline">
-        <input type="hidden" name="selectedCustomers" value="" />
-        <a class="btn btn-outline-danger" onclick="deleteBook()">Delete</a>
-      </form>
+    <div class="mainContentArea">
+      <div th:insert="~{header :: navHeader (activeNav='customers')}"></div>
+      <h2 class="mx-2 p-2 headerBg"><i class="fa-solid fa-users"></i> Customers List </h2>
+      <div class="d-flex justify-content-between align-items-center my-2 mx-3">
+        <div class="customerButtonContainer">
+          <a class="btn btn-outline-success" th:href="@{/customers/add}"><i class="fa-solid fa-plus"></i> Add</a>
+          <a class="btn btn-outline-primary mx-2" onclick="editCustomer()"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+          <form th:action="@{/customers/delete}" method="POST" name="deleteForm" class="d-inline">
+            <input type="hidden" name="selectedCustomers" value="" />
+            <a class="btn btn-outline-danger" onclick="deleteBook()"><i class="fa-solid fa-trash"></i> Delete</a>
+          </form>
+        </div>
+        <div class="searchContainer d-flex">
+          <form class="d-flex" role="search" onsubmit="return searchItem()" th:action="@{/customers}" method="GET">
+            <select id="filterVal" class="form-select customDropDown mx-3 autoWid" name="filterVal" aria-label="Default select example">
+              <option value="0" selected>Choose Filter</option>
+              <option value="1">First Name</option>
+              <option value="2">Last Name</option>
+              <option value="3">Email</option>
+              <option value="4">Phone</option>
+              <option value="5">Address</option>
+            </select>
+            <input id="searchVal" class="form-control me-2 autoWid" type="search" placeholder="Search" aria-label="Customer Name" name="search">
+            <button class="btn btn-outline-success mx-2 autoWid" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+          </form>
+          <a class="btn btn-outline-secondary text-decoration-none mx-2" th:href="@{/customers}" th:method="GET"><i class="fa-solid fa-eraser"></i> Clear Search</a>
+        </div>
+      </div>
+
+      <div class="customerGridContainer mx-2 p-2">
+        <table class="table table-hover table-bordered">
+          <thead>
+          <tr class="table-dark">
+            <th scope="col"></th>
+            <th scope="col">Sl No</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Borrowed Books</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr th:each="customerObj, iterStat : ${customerList}">
+            <td>
+              <input class="form-check-input" type="checkbox" th:value="${customerObj.customerId}" id="customerIdCheck">
+            </td>
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${customerObj.firstName}"></td>
+            <td th:text="${customerObj.lastName}"></td>
+            <td th:text="${customerObj.email}"></td>
+            <td th:text="${customerObj.phone}"></td>
+            <td th:text="${customerObj.address}"></td>
+            <td><a th:href="@{/records/{id}(id=${customerObj.customerId})}">View Details</a></td>
+          </tr>
+          </tbody>
+
+        </table>
+
+        <!--      <nav aria-label="Page navigation example">-->
+        <!--        <ul class="pagination justify-content-end">-->
+        <!--          <li class="page-item"><a class="page-link" href="#">Previous</a></li>-->
+        <!--          <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+        <!--          <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+        <!--          <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+        <!--          <li class="page-item"><a class="page-link" href="#">Next</a></li>-->
+        <!--        </ul>-->
+        <!--      </nav>-->
+
+      </div>
     </div>
-    <div class="searchContainer d-flex">
-      <form class="d-flex" role="search" onsubmit="return searchItem()" th:action="@{/customers}" method="GET">
-        <select id="filterVal" class="form-select customDropDown mx-3" name="filterVal" aria-label="Default select example">
-          <option value="0" selected>Choose Filter</option>
-          <option value="1">First Name</option>
-          <option value="2">Last Name</option>
-          <option value="3">Email</option>
-          <option value="4">Phone</option>
-          <option value="5">Address</option>
-        </select>
-        <input id="searchVal" class="form-control me-2" type="search" placeholder="Search" aria-label="Customer Name" name="search">
-        <button class="btn btn-outline-success mx-2" type="submit">Search</button>
-      </form>
-      <a class="btn btn-outline-secondary text-decoration-none mx-2" th:href="@{/customers}" th:method="GET">Clear Search</a>
-    </div>
-  </div>
-
-  <div class="customerGridContainer mx-auto p-2">
-    <table class="table table-hover table-bordered">
-      <thead>
-      <tr class="table-dark">
-        <th scope="col"></th>
-        <th scope="col">Sl No</th>
-        <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Phone</th>
-        <th scope="col">Address</th>
-        <th scope="col">Borrowed Books</th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <tr th:each="customerObj, iterStat : ${customerList}">
-        <td>
-          <input class="form-check-input" type="checkbox" th:value="${customerObj.customerId}" id="customerIdCheck">
-        </td>
-        <td th:text="${iterStat.count}"></td>
-        <td th:text="${customerObj.firstName}"></td>
-        <td th:text="${customerObj.lastName}"></td>
-        <td th:text="${customerObj.email}"></td>
-        <td th:text="${customerObj.phone}"></td>
-        <td th:text="${customerObj.address}"></td>
-        <td><a th:href="@{/records/{id}(id=${customerObj.customerId})}">View Details</a></td>
-      </tr>
-      </tbody>
-
-    </table>
-
-    <!--      <nav aria-label="Page navigation example">-->
-    <!--        <ul class="pagination justify-content-end">-->
-    <!--          <li class="page-item"><a class="page-link" href="#">Previous</a></li>-->
-    <!--          <li class="page-item"><a class="page-link" href="#">1</a></li>-->
-    <!--          <li class="page-item"><a class="page-link" href="#">2</a></li>-->
-    <!--          <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-    <!--          <li class="page-item"><a class="page-link" href="#">Next</a></li>-->
-    <!--        </ul>-->
-    <!--      </nav>-->
-
-  </div>
-</div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-<script>
+    <script>
 
-  function editCustomer(){
-    let customerIdCheck = document.querySelectorAll("#customerIdCheck:checked");
-    if(customerIdCheck.length !== 1){
-      alert("Please select only one item");
-    }else{
-      window.location.href = "/customers/" + customerIdCheck[0].value;
-    }
-  }
-
-  function deleteBook(){
-    let customerIdCheck = document.querySelectorAll("#customerIdCheck:checked");
-    if(customerIdCheck.length === 0){
-      alert("Please select atleast one item");
-    }else{
-      let confirmUser = confirm("Do you want to delete the selected item(s)? ");
-      if(confirmUser === true){
-        let selectedValues = [];
-        customerIdCheck.forEach((checkbox) => {
-          selectedValues.push(checkbox.value);
-        });
-        document.deleteForm.selectedCustomers.value = selectedValues.join(",");
-        document.deleteForm.submit();
+      function editCustomer(){
+        let customerIdCheck = document.querySelectorAll("#customerIdCheck:checked");
+        if(customerIdCheck.length !== 1){
+          showCustomAlert("Please select only one item");
+        }else{
+          window.location.href = "/customers/" + customerIdCheck[0].value;
+        }
       }
-    }
-  }
 
-  function searchItem(){
-    let selectedFilter = document.getElementById("filterVal").value.trim();
-    let searchVal = document.getElementById("searchVal").value.trim();
-    if(selectedFilter === "0"){
-      alert("Choose any valid filter");
-      return false;
-    }
-    if(searchVal === ""){
-      alert("Search field is empty");
-      return false;
-    }
-  }
+      function deleteBook(){
+        let customerIdCheck = document.querySelectorAll("#customerIdCheck:checked");
+        if(customerIdCheck.length === 0){
+          showCustomAlert("Please select atleast one item");
+        }else{
+          let confirmUser = confirm("Do you want to delete the selected item(s)? ");
+          if(confirmUser === true){
+            let selectedValues = [];
+            customerIdCheck.forEach((checkbox) => {
+              selectedValues.push(checkbox.value);
+            });
+            document.deleteForm.selectedCustomers.value = selectedValues.join(",");
+            document.deleteForm.submit();
+          }
+        }
+      }
 
-</script>
+      function searchItem(){
+        let selectedFilter = document.getElementById("filterVal").value.trim();
+        let searchVal = document.getElementById("searchVal").value.trim();
+        if(selectedFilter === "0"){
+          showCustomAlert("Choose any valid filter");
+          return false;
+        }
+        if(searchVal === ""){
+          showCustomAlert("Search field is empty");
+          return false;
+        }
+      }
 
-</body>
+      function showCustomAlert(message){
+        window.scrollTo(0,0);
+        jQuery(".customAlert").fadeIn(500);
+        jQuery(".customAlert").addClass('alert alert-danger').html(message);
+        setTimeout(()=>{
+          jQuery(".customAlert").fadeOut(500);
+        },4000);
+      }
+
+    </script>
+
+  </body>
 </html>
