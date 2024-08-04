@@ -1,130 +1,129 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
-<head>
-  <meta charset="UTF-8">
-  <title>Records List</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link th:href="@{/css/styles.css}" rel="stylesheet">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Records List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  </head>
+  <body>
 
-<div class="mainContentArea">
-  <div th:insert="~{header :: navHeader}"></div>
-  <div class="d-flex justify-content-between align-items-center my-2 mx-2">
-    <div class="customerButtonContainer">
-      <a class="btn btn-outline-success" th:href="@{/books/add}">Add</a>
-      <a class="btn btn-outline-primary mx-2" onclick="editBook()">Edit</a>
-      <form th:action="@{/books/delete}" method="POST" name="deleteForm" class="d-inline">
-        <input type="hidden" name="selectedBooks" value="" />
-        <a class="btn btn-outline-danger" onclick="deleteBook()">Delete</a>
-      </form>
+    <div class="mainContentArea">
+      <div th:insert="~{header :: navHeader (activeNav='records')}"></div>
+      <h2 class="mx-2 p-2 headerBg"><i class="fa-solid fa-file"></i> Records List </h2>
+      <div class="d-flex justify-content-between align-items-center my-2 mx-2">
+        <div class="customerButtonContainer">
+          <a class="btn btn-outline-primary mx-2" onclick="editRecord()"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+          <form th:action="@{/records/delete}" method="POST" name="deleteForm" class="d-inline">
+            <input type="hidden" name="selectedRecords" value="" />
+            <a class="btn btn-outline-danger" onclick="deleteBook()"><i class="fa-solid fa-trash"></i> Delete</a>
+          </form>
+        </div>
+      </div>
+
+      <div class="customerGridContainer mx-auto p-2">
+        <table class="table table-hover table-bordered">
+          <thead>
+          <tr class="table-dark">
+            <th scope="col"></th>
+            <th scope="col">Sl No</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Book Title</th>
+            <th scope="col">Borrowed Date</th>
+            <th scope="col">Expected Return Date</th>
+            <th scope="col">Actual Return Date</th>
+            <th scope="col">On Time Return</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr th:each="borrowerObj, iterStat : ${borrowedBookDetailsList}">
+            <td>
+              <input class="form-check-input" type="checkbox" th:value="${borrowerObj.borrowId}" id="borrowIdCheck">
+            </td>
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${borrowerObj.customer.firstName} + ' ' + ${borrowerObj.customer.lastName} "></td>
+            <td th:text="${borrowerObj.book.title}"></td>
+            <td th:text="${#dates.format(borrowerObj.borrowDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="${#dates.format(borrowerObj.expectedReturnDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="${#dates.format(borrowerObj.actualReturnDate, 'yyyy-MM-dd')}"></td>
+            <td th:if="${borrowerObj.actualReturnDate != null && borrowerObj.actualReturnDate <= borrowerObj.expectedReturnDate}"><i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></td>
+            <td th:if="${borrowerObj.actualReturnDate != null && borrowerObj.actualReturnDate > borrowerObj.expectedReturnDate}"><i class="fa-solid fa-ban" style="color: #f20202;"></i></td>
+            <td th:if="${borrowerObj.actualReturnDate == null}"><i class="fa-regular fa-hourglass-half" style="color: #948f8f;"></i></td>
+          </tr>
+          </tbody>
+
+        </table>
+
+        <!--      <nav aria-label="Page navigation example">-->
+        <!--        <ul class="pagination justify-content-end">-->
+        <!--          <li class="page-item"><a class="page-link" href="#">Previous</a></li>-->
+        <!--          <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+        <!--          <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+        <!--          <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+        <!--          <li class="page-item"><a class="page-link" href="#">Next</a></li>-->
+        <!--        </ul>-->
+        <!--      </nav>-->
+
+      </div>
     </div>
-    <div class="searchContainer d-flex">
-      <form class="d-flex" role="search" onsubmit="return searchItem()" th:action="@{/books}" method="GET">
-        <select id="filterVal" class="form-select customDropDown mx-3" name="filterVal" aria-label="Default select example">
-          <option value="0" selected>Choose Filter</option>
-          <option value="1">Book Title</option>
-          <option value="2">Author</option>
-          <option value="3">Publisher</option>
-          <option value="4">Publication Year</option>
-          <option value="5">Category</option>
-          <option value="6">Available Quantity</option>
-        </select>
-        <input id="searchVal" class="form-control me-2" type="search" placeholder="Search" aria-label="Book Title" name="search">
-        <button class="btn btn-outline-success mx-2" type="submit">Search</button>
-      </form>
-      <a class="btn btn-outline-secondary text-decoration-none mx-2" th:href="@{/books}" th:method="GET">Clear Search</a>
-    </div>
-  </div>
-
-  <div class="customerGridContainer mx-auto p-2">
-    <table class="table table-hover table-bordered">
-      <thead>
-      <tr class="table-dark">
-        <th scope="col"></th>
-        <th scope="col">Sl No</th>
-        <th scope="col">Customer Name</th>
-        <th scope="col">Book Title</th>
-        <th scope="col">Borrowed Date</th>
-        <th scope="col">Expected Return Date</th>
-        <th scope="col">Actual Return Date</th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <tr th:each="borrowerObj, iterStat : ${borrowedBookDetailsList}">
-        <td>
-          <input class="form-check-input" type="checkbox" th:value="${borrowerObj.borrowId}" id="borrowIdCheck">
-        </td>
-        <td th:text="${iterStat.count}"></td>
-        <td th:text="${borrowerObj.customer.firstName} + ' ' + ${borrowerObj.customer.lastName} "></td>
-        <td th:text="${borrowerObj.book.title}"></td>
-        <td th:text="${borrowerObj.borrowDate}"></td>
-        <td th:text="${borrowerObj.expectedReturnDate}"></td>
-        <td th:text="${borrowerObj.actualReturnDate}">Null value</td>
-      </tr>
-      </tbody>
-
-    </table>
-
-    <!--      <nav aria-label="Page navigation example">-->
-    <!--        <ul class="pagination justify-content-end">-->
-    <!--          <li class="page-item"><a class="page-link" href="#">Previous</a></li>-->
-    <!--          <li class="page-item"><a class="page-link" href="#">1</a></li>-->
-    <!--          <li class="page-item"><a class="page-link" href="#">2</a></li>-->
-    <!--          <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-    <!--          <li class="page-item"><a class="page-link" href="#">Next</a></li>-->
-    <!--        </ul>-->
-    <!--      </nav>-->
-
-  </div>
-</div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-<script>
+    <script>
 
-  function editBook(){
-    let bookIdCheck = document.querySelectorAll("#bookIdCheck:checked");
-    if(bookIdCheck.length !== 1){
-      alert("Please select only one item");
-    }else{
-      window.location.href = "/books/" + bookIdCheck[0].value;
-    }
-  }
-
-  function deleteBook(){
-    let bookIdCheck = document.querySelectorAll("#bookIdCheck:checked");
-    if(bookIdCheck.length === 0){
-      alert("Please select atleast one item");
-    }else{
-      let confirmUser = confirm("Do you want to delete the selected item(s)? ");
-      if(confirmUser === true){
-        let selectedValues = [];
-        bookIdCheck.forEach((checkbox) => {
-          selectedValues.push(checkbox.value);
-        });
-        document.deleteForm.selectedBooks.value = selectedValues.join(",");
-        document.deleteForm.submit();
+      function editRecord(){
+        let borrowIdCheck = document.querySelectorAll("#borrowIdCheck:checked");
+        if(borrowIdCheck.length !== 1){
+          showCustomAlert("Please select only one item");
+        }else{
+          window.location.href = "/records/edit/" + borrowIdCheck[0].value;
+        }
       }
-    }
-  }
 
-  function searchItem(){
-    let selectedFilter = document.getElementById("filterVal").value.trim();
-    let searchVal = document.getElementById("searchVal").value.trim();
-    if(selectedFilter === "0"){
-      alert("Choose any valid filter");
-      return false;
-    }
-    if(searchVal === ""){
-      alert("Search field is empty");
-      return false;
-    }
-  }
+      function deleteBook(){
+        let borrowIdCheck = document.querySelectorAll("#borrowIdCheck:checked");
+        if(borrowIdCheck.length === 0){
+          showCustomAlert("Please select atleast one item");
+        }else{
+          let confirmUser = confirm("Do you want to delete the selected item(s)? ");
+          if(confirmUser === true){
+            let selectedValues = [];
+            borrowIdCheck.forEach((checkbox) => {
+              selectedValues.push(checkbox.value);
+            });
+            document.deleteForm.selectedRecords.value = selectedValues.join(",");
+            document.deleteForm.submit();
+          }
+        }
+      }
 
-</script>
+      function searchItem(){
+        let selectedFilter = document.getElementById("filterVal").value.trim();
+        let searchVal = document.getElementById("searchVal").value.trim();
+        if(selectedFilter === "0"){
+          showCustomAlert("Choose any valid filter");
+          return false;
+        }
+        if(searchVal === ""){
+          showCustomAlert("Search field is empty");
+          return false;
+        }
+      }
 
-</body>
+      function showCustomAlert(message){
+        window.scrollTo(0,0);
+        jQuery(".customAlert").fadeIn(500);
+        jQuery(".customAlert").addClass('alert alert-danger').html(message);
+        setTimeout(()=>{
+          jQuery(".customAlert").fadeOut(500);
+        },4000);
+      }
+
+    </script>
+
+  </body>
 </html>

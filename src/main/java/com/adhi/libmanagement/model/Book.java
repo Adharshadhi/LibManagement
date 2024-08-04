@@ -1,4 +1,4 @@
-package com.example.libmanagement.model;
+package com.adhi.libmanagement.model;
 
 import jakarta.persistence.*;
 

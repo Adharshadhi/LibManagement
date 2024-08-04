@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+    <head>
+        <meta charset="UTF-8">
+        <title>Error!</title>
+        <link th:href="@{/css/styles.css}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+    <body>
+        <div class="errorContainer">
+            <h1><i class="fa-solid fa-bug"></i> Oops Something Bad Happened! </h1>
+            <p>We recommend you to go back</p>
+            <p>If you are a techie, details are kept hidden by the way:) </p>
+
+            <p><a th:href="@{/books}">Click here to go back to safety</a></p>
+
+            <p th:text="${errorResponse.status}" hidden></p>
+            <p th:text="${errorResponse.message}" hidden></p>
+        </div>
+    </body>
+</html>

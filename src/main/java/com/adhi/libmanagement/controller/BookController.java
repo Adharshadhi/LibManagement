@@ -1,7 +1,7 @@
-package com.example.libmanagement.controller;
+package com.adhi.libmanagement.controller;
 
-import com.example.libmanagement.model.Book;
-import com.example.libmanagement.service.BookService;
+import com.adhi.libmanagement.model.Book;
+import com.adhi.libmanagement.service.BookService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +12,8 @@ import java.util.List;
 
 @Controller
 public class BookController {
+
+    private static final String CLASS_NAME = "com.adhi.libmanagement.controller.BookController";
 
     private BookService bookService;
 
@@ -25,18 +27,29 @@ public class BookController {
         return "index";
     }
 
+    @GetMapping("/error")
+    public String errorPage(){
+        return "error";
+    }
+
     @GetMapping("/books")
     public String listBooks(@RequestParam(defaultValue = "") String search,
                             @RequestParam(defaultValue = "0") Integer filterVal,
                             Model model){
         List<Book> bookList;
-        if(search.trim().equals("")){
-            bookList = bookService.listBooks();
-        }else{
-            bookList = bookService.listBooks(search,filterVal);
+        try{
+            if(search.trim().equals("")){
+                bookList = bookService.listBooks();
+            }else{
+                bookList = bookService.listBooks(search,filterVal);
+            }
+            model.addAttribute("bookList",bookList);
+            return "listbook";
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in listBooks method -> " +  ex.getMessage());
+            return "error";
         }
-        model.addAttribute("bookList",bookList);
-        return "listbook";
+
     }
 
     @GetMapping("/books/add")
@@ -53,16 +66,22 @@ public class BookController {
             int status = bookService.saveBook(book, updateAction);
             response.sendRedirect("/books");
         }catch (Exception ex){
-            System.out.println("Exception caught");
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in saveBook method -> " +  ex.getMessage());
+            return "error";
         }
         return null;
     }
 
     @GetMapping("/books/{id}")
     public String editBook(@PathVariable Integer id, Model model){
-        Book book = bookService.listBookById(id);
-        model.addAttribute("book",book);
-        return "addeditbook";
+        try{
+            Book book = bookService.listBookById(id);
+            model.addAttribute("book",book);
+            return "addeditbook";
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in editBook method -> " +  ex.getMessage());
+            return "error";
+        }
     }
 
     @PostMapping("/books/delete")
@@ -72,7 +91,8 @@ public class BookController {
             int status = bookService.deleteBook(selectedBooks);
             response.sendRedirect("/books");
         }catch (Exception ex){
-            System.out.println("Exception caught");
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in deleteBook method -> " +  ex.getMessage());
+            return "error";
         }
         return null;
     }
