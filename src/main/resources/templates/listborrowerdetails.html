@@ -48,9 +48,9 @@
             <td th:text="${#dates.format(borrowerObj.borrowDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${#dates.format(borrowerObj.expectedReturnDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${#dates.format(borrowerObj.actualReturnDate, 'yyyy-MM-dd')}"></td>
-            <td th:if="${borrowerObj.actualReturnDate != null && borrowerObj.actualReturnDate <= borrowerObj.expectedReturnDate}"><i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></td>
-            <td th:if="${borrowerObj.actualReturnDate != null && borrowerObj.actualReturnDate > borrowerObj.expectedReturnDate}"><i class="fa-solid fa-ban" style="color: #f20202;"></i></td>
-            <td th:if="${borrowerObj.actualReturnDate == null}"><i class="fa-regular fa-hourglass-half" style="color: #948f8f;"></i></td>
+            <td th:title="'Returned on time'" th:if="${borrowerObj.actualReturnDate != null && borrowerObj.actualReturnDate <= borrowerObj.expectedReturnDate}"><i class="fa-solid fa-circle-check" style="color: #63E6BE;"></i></td>
+            <td th:title="'Late return'" th:if="${borrowerObj.actualReturnDate != null && borrowerObj.actualReturnDate > borrowerObj.expectedReturnDate}"><i class="fa-solid fa-ban" style="color: #f20202;"></i></td>
+            <td th:title="'Not yet returned'" th:if="${borrowerObj.actualReturnDate == null}"><i class="fa-regular fa-hourglass-half" style="color: #948f8f;"></i></td>
           </tr>
           </tbody>
 

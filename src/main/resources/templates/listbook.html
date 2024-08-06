@@ -67,8 +67,8 @@
           <td th:text="${bookObj.publicationYear}"></td>
           <td th:text="${bookObj.category}"></td>
           <td th:text="${bookObj.availableQuantity}"></td>
-          <td th:if="${bookObj.availableQuantity} > 0"><i class="fa-solid fa-circle" style="color: #63E6BE;"></i></td>
-          <td th:if="${bookObj.availableQuantity} == 0"><i class="fa-solid fa-circle" style="color: #fc7373;"></i></td>
+          <td th:title="'In Stock'" th:if="${bookObj.availableQuantity} > 0"><i class="fa-solid fa-circle" style="color: #63E6BE;"></i></td>
+          <td th:title="'Out of Stock'" th:if="${bookObj.availableQuantity} == 0"><i class="fa-solid fa-circle" style="color: #fc7373;"></i></td>
         </tr>
         </tbody>
 

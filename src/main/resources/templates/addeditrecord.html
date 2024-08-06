@@ -66,7 +66,9 @@
                 let selectedBook = document.getElementById("selectedBook").value;
                 let borrowDate = document.getElementById("borrowDate").value;
                 let expectedReturnDate = document.getElementById("expectedReturnDate").value;
-                let actualReturnDate = document.getElementById("actualReturnDate").value;
+                let actualReturnDate = (document.getElementById("actualReturnDate")) === null
+                    ? null
+                    : document.getElementById("actualReturnDate").value;
 
                 if(validateRequired(selectedCustomer)){
                     showCustomAlert("Customer must not be empty!");
