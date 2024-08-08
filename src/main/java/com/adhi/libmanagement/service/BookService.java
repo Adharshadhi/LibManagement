@@ -114,4 +114,13 @@ public class BookService{
         }
     }
 
+    public long getDashboardTotalNum(){
+        try{
+            return bookDao.getDashboardTotalNum();
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in getDashboardTotalNum method -> " +  ex.getMessage());
+            return 0;
+        }
+    }
+
 }

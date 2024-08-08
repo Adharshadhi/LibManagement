@@ -97,4 +97,10 @@ public class BookController {
         return null;
     }
 
+    @GetMapping("/dashboards")
+    public String listDashboards(Model model){
+        model.addAttribute("dashboardNum",bookService.getDashboardTotalNum());
+        return "listdashboard";
+    }
+
 }

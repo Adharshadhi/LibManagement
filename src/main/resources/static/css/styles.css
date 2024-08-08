@@ -43,3 +43,14 @@
     align-items: center;
     flex-direction: column;
 }
+.dashboardContainer{
+    display: flex;
+    justify-content: space-around;
+}
+.dashboardContainer canvas{
+    width: 500px!important;
+    height: 350px!important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    margin-bottom: 50px;
+}

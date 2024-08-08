@@ -3,6 +3,7 @@ package com.adhi.libmanagement.dao;
 import com.adhi.libmanagement.model.Book;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
@@ -87,6 +88,18 @@ public class BookDao {
             System.out.println("Exception occurred at-> " + CLASS_NAME + " in listAvailableBooks method -> " +  ex.getMessage());
         }
         return null;
+    }
+
+    public long getDashboardTotalNum() {
+        try{
+            String queryToExecute = "SELECT count(*) AS total FROM dashboards";
+            Query query = entityManager.createNativeQuery(queryToExecute);
+            long result = (long) query.getSingleResult();
+            return result;
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in getDashboardTotalNum method -> " +  ex.getMessage());
+        }
+        return 0;
     }
 
 }
