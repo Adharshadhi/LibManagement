@@ -11,6 +11,10 @@
         <div class="mainContentArea">
             <div th:insert="~{header :: navHeader (activeNav='dashboard')}"></div>
             <input type="hidden" id="dashboardNum" th:value="${dashboardNum}"/>
+            <div class="headerContainer d-flex justify-content-between align-items-center">
+                <h2 class="mx-2 p-2 headerBg"><i class="fa-solid fa-chart-column"></i> Dashboards</h2>
+                <span title="Reload Chart" class="reloadIcon" onclick="triggerDashboards()"><i class="fa-solid fa-rotate"></i></span>
+            </div>
             <div class="dashboardContainer">
                 <div class="canvaContainerOne"></div>
                 <div class="canvaContainerTwo"></div>

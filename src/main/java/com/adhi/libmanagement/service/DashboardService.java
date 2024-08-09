@@ -10,6 +10,8 @@ import java.util.List;
 @Service
 public class DashboardService {
 
+    private static final String CLASS_NAME = "com.adhi.libmanagement.controller.DashboardService";
+
     private DashboardDao dashboardDao;
 
     @Autowired
@@ -18,15 +20,30 @@ public class DashboardService {
     }
 
     public List<String> getDashboardLabel(int dashboardId){
-        return dashboardDao.getDashboardLabel(dashboardId);
+        try{
+            return dashboardDao.getDashboardLabel(dashboardId);
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in getDashboardLabel method -> " +  ex.getMessage());
+            return null;
+        }
     }
 
     public List<Object> getDashboardData(int dashboardId){
-        return dashboardDao.getDashboardData(dashboardId);
+        try{
+            return dashboardDao.getDashboardData(dashboardId);
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in getDashboardData method -> " +  ex.getMessage());
+            return null;
+        }
     }
 
     public Dashboard getSingleDashboard(int dashboardId){
-        return dashboardDao.getSingleDashboard(dashboardId);
+        try{
+            return dashboardDao.getSingleDashboard(dashboardId);
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in getSingleDashboard method -> " +  ex.getMessage());
+            return null;
+        }
     }
 
 }

@@ -99,8 +99,13 @@ public class BookController {
 
     @GetMapping("/dashboards")
     public String listDashboards(Model model){
-        model.addAttribute("dashboardNum",bookService.getDashboardTotalNum());
-        return "listdashboard";
+        try{
+            model.addAttribute("dashboardNum",bookService.getDashboardTotalNum());
+            return "listdashboard";
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in listDashboards method -> " +  ex.getMessage());
+            return "error";
+        }
     }
 
 }

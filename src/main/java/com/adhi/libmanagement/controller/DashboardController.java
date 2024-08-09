@@ -13,6 +13,8 @@ import java.util.List;
 @RestController
 public class DashboardController {
 
+    private static final String CLASS_NAME = "com.adhi.libmanagement.controller.DashboardController";
+
     private DashboardService dashboardService;
 
     @Autowired
@@ -22,14 +24,16 @@ public class DashboardController {
 
     @GetMapping("/getDashboardData")
     public DashboardModel getDashboardData(@RequestParam(defaultValue = "0") Integer dashboardId){
-        List<String> dashboardLabels = dashboardService.getDashboardLabel(dashboardId);
-        List dashboardData = dashboardService.getDashboardData(dashboardId);
-        Dashboard dashboard = dashboardService.getSingleDashboard(dashboardId);
-        DashboardModel dashboardModel = new DashboardModel();
-        dashboardModel.setDashboardLabels(dashboardLabels);
-        dashboardModel.setDashboardData(dashboardData);
-        dashboardModel.setDashboard(dashboard);
-        return dashboardModel;
+        try{
+            List<String> dashboardLabels = dashboardService.getDashboardLabel(dashboardId);
+            List dashboardData = dashboardService.getDashboardData(dashboardId);
+            Dashboard dashboard = dashboardService.getSingleDashboard(dashboardId);
+            DashboardModel dashboardModel = new DashboardModel(dashboardLabels, dashboardData, dashboard);
+            return dashboardModel;
+        }catch (Exception ex){
+            System.out.println("Exception occurred at-> " + CLASS_NAME + " in getDashboardData method -> " +  ex.getMessage());
+            return null;
+        }
     }
 
 }
